@@ -1,7 +1,7 @@
 {
   "id": "nimegami",
   "name": "NimeGami",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "manifestURI": "https://raw.githubusercontent.com/ilyavea/Extension/refs/heads/main/nimegami/manifest.json",
   "language": "javascript",
   "type": "onlinestream-provider",
