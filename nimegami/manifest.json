@@ -1,0 +1,14 @@
+{
+  "id": "nimegami",
+  "name": "NimeGami",
+  "version": "0.0.1",
+  "manifestURI": "",
+  "language": "javascript",
+  "type": "onlinestream-provider",
+  "description": "Nimegami Streaming Provider for Seanime Denshi",
+  "author": "Ilyavea",
+  "icon": "",
+  "website": "",
+  "lang": "id",
+  "payloadURI": ""
+}
