@@ -103,6 +103,64 @@ class Provider {
     return Buffer.from(str, "base64").toString("utf-8");
   }
 
+  async detectVideoType(url) {
+    const res = await fetch(url, {
+      method: "GET",
+      redirect: "follow",
+    });
+
+    const headers = res.headers || {};
+    const contentType =
+      headers["content-type"] ||
+      headers["Content-Type"] ||
+      "";
+
+    // DEBUG: lihat header & final URL
+    console.log("[NIMEGAMI] detect headers:", headers);
+    console.log("[NIMEGAMI] final url:", res.url);
+
+    if (contentType.includes("application/vnd.apple.mpegurl")) {
+      return { type: "m3u8", finalUrl: res.url };
+    }
+
+    if (contentType.includes("video/mp4")) {
+      return { type: "mp4", finalUrl: res.url };
+    }
+
+    const text = await res.text();
+
+    if (text.startsWith("#EXTM3U")) {
+      return { type: "m3u8", finalUrl: res.url };
+    }
+
+    return { type: "unknown", finalUrl: res.url };
+  }
+
+  async resolveBerkasdrive(url) {
+    const res = await fetch(url, {
+      headers: {
+        Referer: this.base,
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+      },
+    });
+
+    const html = await res.text();
+
+    // CARI m3u8
+    const m3u8 =
+      html.match(/https?:\/\/[^"' ]+\.m3u8[^"' ]*/)?.[0];
+
+    if (m3u8) {
+      return {
+        type: "m3u8",
+        finalUrl: m3u8,
+      };
+    }
+
+    return null;
+  }
+
   async findEpisodeServer(episode, _server) {
     const rawEncoded = episode.id;
 
@@ -113,6 +171,7 @@ class Provider {
     let decoded;
     try {
       decoded = this.decodeBase64(rawEncoded);
+      decoded = decoded.replace(/\\\//g, "/");
     } catch {
       throw new Error("Invalid episode base64");
     }
@@ -128,16 +187,31 @@ class Provider {
 
     for (const q of qualities) {
       const quality = q.format;
-      for (const url of q.url) {
+
+      for (const rawUrl of q.url) {
+        const cleanUrl = rawUrl.replace(/\\\//g, "/");
+        const u = new URL(cleanUrl);
+        const encoded = u.searchParams.get("id");
+        if (!encoded) continue;
+
+        let finalUrl;
+        try {
+          finalUrl = Buffer.from(encoded, "base64").toString("binary");
+        } catch {
+          continue;
+        }
+
         videoSources.push({
-          url,
+          url: finalUrl,
           quality,
-          type: "mp4",
+          type: "m3u8",
           subtitles: [],
         });
       }
     }
 
+    console.log("[NIMEGAMI] videoSources:", videoSources);
+    
     if (!videoSources.length) {
       throw new Error("No playable video found");
     }
