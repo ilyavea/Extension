@@ -103,7 +103,7 @@ class Provider {
     return Buffer.from(str, "base64").toString("utf-8");
   }
 
-  async findEpisodeServer(episode, server) {
+  async findEpisodeServer(episode, _server) {
     const rawEncoded = episode.id;
 
     if (!this.isProbablyBase64(rawEncoded)) {
@@ -143,8 +143,12 @@ class Provider {
     }
 
     return {
-      server: server || "NIMEGAMI",
-      headers: {},
+      server: "NIMEGAMI",
+      headers: {
+        Referer: this.base,
+        "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+      },
       videoSources,
     };
   }
