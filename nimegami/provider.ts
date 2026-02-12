@@ -209,7 +209,7 @@ class Provider {
             .replace(/\\\//g, "/");
 
         // cuma berkasdrive / streaming.php yang valid
-        if (!url.includes("streaming.php")) continue;
+        if (!url.includes("streaming")) continue;
 
         // 2. fetch halaman streaming.php
         const res = await fetch(url, {
