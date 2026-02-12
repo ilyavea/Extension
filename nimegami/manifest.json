@@ -2,13 +2,13 @@
   "id": "nimegami",
   "name": "NimeGami",
   "version": "0.0.1",
-  "manifestURI": "",
+  "manifestURI": "https://raw.githubusercontent.com/ilyavea/Extension/refs/heads/main/nimegami/manifest.json",
   "language": "javascript",
   "type": "onlinestream-provider",
   "description": "Nimegami Streaming Provider for Seanime Denshi",
   "author": "Ilyavea",
-  "icon": "",
+  "icon": "https://raw.githubusercontent.com/ilyavea/Extension/refs/heads/main/icon/nimegami.png",
   "website": "",
   "lang": "id",
-  "payloadURI": ""
+  "payloadURI": "https://raw.githubusercontent.com/ilyavea/Extension/refs/heads/main/nimegami/provider.js"
 }
