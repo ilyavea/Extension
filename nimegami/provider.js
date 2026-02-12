@@ -129,8 +129,12 @@ class Provider {
     for (const q of qualities) {
       const quality = q.format;
       for (const url of q.url) {
-        const extracted = await this.extractVideos(url, quality);
-        videoSources.push(...extracted);
+        videoSources.push({
+          url,
+          quality,
+          type: "mp4",
+          subtitles: [],
+        });
       }
     }
 
